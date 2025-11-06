@@ -1,8 +1,24 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is a [Next.js](https://nextjs.org) text-to-speech application powered by [ElevenLabs](https://elevenlabs.io/).
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install Dependencies
+
+```bash
+npm install
+```
+
+### 2. Set Up Environment Variables
+
+Create a `.env.local` file in the root directory and add your ElevenLabs API key:
+
+```env
+ELEVENLABS_API_KEY=your_api_key_here
+```
+
+You can get your API key from [ElevenLabs](https://elevenlabs.io/).
+
+### 3. Run the Development Server
 
 ```bash
 npm run dev

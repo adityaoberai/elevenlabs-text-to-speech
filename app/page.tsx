@@ -1,65 +1,225 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import VoiceDropdown from '@/components/VoiceDropdown';
+import AudioPlayer from '@/components/AudioPlayer';
+
+interface VoiceSettings {
+  voice_id: string;
+  stability: number;
+  style: number;
+  speed: number;
+}
 
 export default function Home() {
+  const [text, setText] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
+  const [settings, setSettings] = useState<VoiceSettings>({
+    voice_id: '21m00Tcm4TlvDq8ikWAM',
+    stability: 0.5,
+    style: 0.0,
+    speed: 1.0,
+  });
+
+  const handleGenerate = async () => {
+    if (!text.trim()) {
+      setError('Please enter some text');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    setAudioUrl(null);
+
+    try {
+      const response = await fetch('/api/text-to-speech', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text,
+          ...settings,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to generate speech');
+      }
+
+      setAudioUrl(data.audio);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      <div className="container mx-auto px-4 py-12 max-w-4xl">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">
+              Text to Speech Demo
+            </h1>
+            <p className="text-slate-600 dark:text-slate-400">
+              Powered by ElevenLabs and Appwrite Sites
+            </p>
+          </div>
+
+          {/* Text Input */}
+          <div className="mb-6">
+            <label
+              htmlFor="text-input"
+              className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              Enter your text
+            </label>
+            <textarea
+              id="text-input"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Type or paste your text here..."
+              className="w-full h-40 px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg 
+                       bg-white dark:bg-slate-700 text-slate-900 dark:text-white 
+                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                       resize-none"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <div className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+              {text.length} characters
+            </div>
+          </div>
+
+          {/* Settings Toggle */}
+          <div className="mb-6">
+            <button
+              onClick={() => setShowSettings(!showSettings)}
+              className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              {showSettings ? 'Hide' : 'Show'} Advanced Settings
+            </button>
+          </div>
+
+          {/* Advanced Settings */}
+          {showSettings && (
+            <div className="mb-6 p-4 bg-slate-50 dark:bg-slate-700 rounded-lg space-y-4">
+              {/* Voice Selection */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  Voice
+                </label>
+                <VoiceDropdown
+                  value={settings.voice_id}
+                  onChange={(voiceId) =>
+                    setSettings({ ...settings, voice_id: voiceId })
+                  }
+                />
+              </div>
+
+              {/* Stability */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  Stability: {settings.stability.toFixed(2)}
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={settings.stability}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      stability: parseFloat(e.target.value),
+                    })
+                  }
+                  className="w-full"
+                />
+                <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  Lower values make the voice more variable and expressive
+                </div>
+              </div>
+
+              {/* Style */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  Style: {settings.style.toFixed(2)}
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={settings.style}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      style: parseFloat(e.target.value),
+                    })
+                  }
+                  className="w-full"
+                />
+                <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  Higher values add more style and emotion
+                </div>
+              </div>
+
+              {/* Speed */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  Speed: {settings.speed.toFixed(2)}x
+                </label>
+                <input
+                  type="range"
+                  min="0.7"
+                  max="1.2"
+                  step="0.01"
+                  value={settings.speed}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      speed: parseFloat(e.target.value),
+                    })
+                  }
+                  className="w-full"
+                />
+                <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  1.0 is default speed. Range: 0.7x (slower) to 1.2x (faster)
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Error Message */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+            </div>
+          )}
+
+          {/* Generate Button */}
+          <button
+            onClick={handleGenerate}
+            disabled={loading || !text.trim()}
+            className="w-full py-3 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-400 
+                     text-white font-medium rounded-lg transition-colors
+                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                     disabled:cursor-not-allowed"
           >
-            Documentation
-          </a>
+            {loading ? 'Generating...' : 'Generate Speech'}
+          </button>
+
+          {/* Audio Player */}
+          {audioUrl && <AudioPlayer audioUrl={audioUrl} />}
         </div>
-      </main>
+      </div>
     </div>
   );
 }
