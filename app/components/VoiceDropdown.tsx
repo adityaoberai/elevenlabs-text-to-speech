@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { VOICES, Voice } from '@/constants/voices';
+import { VOICES, Voice } from '@/app/constants/voices';
 
 interface VoiceDropdownProps {
   value: string;

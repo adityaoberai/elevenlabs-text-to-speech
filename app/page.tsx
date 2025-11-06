@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import VoiceDropdown from '@/components/VoiceDropdown';
-import AudioPlayer from '@/components/AudioPlayer';
+import VoiceDropdown from '@/app/components/VoiceDropdown';
+import AudioPlayer from '@/app/components/AudioPlayer';
 
 interface VoiceSettings {
   voice_id: string;
