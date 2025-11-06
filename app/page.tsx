@@ -80,28 +80,38 @@ export default function Home() {
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 max-w-5xl">
         {/* Header Section */}
         <div className="text-center mb-12 sm:mb-16">
-          <div className="inline-flex items-center justify-center gap-4 mb-6">
-            <a href="https://elevenlabs.io/" target="_blank">
-              <div className="bg-white rounded-2xl p-5 shadow-lg">
-                <img 
-                  src="/logos/elevenlabs.png" 
-                  alt="ElevenLabs" 
-                  className="h-6 sm:h-8 w-auto"
-                />
-              </div>
+          <div className="inline-flex items-center justify-center gap-8 mb-6">
+            <a href="https://elevenlabs.io/" target="_blank" className="hover:opacity-80 transition-opacity relative">
+              <img 
+                src="/logos/elevenlabs.png" 
+                alt="ElevenLabs" 
+                className="w-24 sm:w-32 h-auto dark:hidden"
+              />
+              <img 
+                src="/logos/dark/elevenlabs.png" 
+                alt="ElevenLabs" 
+                className="w-24 sm:w-32 h-auto hidden dark:block"
+              />
             </a>
-            <a href="https://appwrite.io/" target="_blank">
-              <div className="bg-white rounded-2xl p-5 shadow-lg">
-                <img 
-                  src="/logos/appwrite.png" 
-                  alt="Appwrite" 
-                  className="h-6 sm:h-8 w-auto"
-                />
-              </div>
+            <div className="h-8 sm:h-10 w-px bg-slate-300 dark:bg-slate-700"></div>
+            <a href="https://appwrite.io/" target="_blank" className="hover:opacity-80 transition-opacity relative">
+              <img 
+                src="/logos/appwrite.png" 
+                alt="Appwrite" 
+                className="w-24 sm:w-32 h-auto dark:hidden"
+              />
+              <img 
+                src="/logos/dark/appwrite.png" 
+                alt="Appwrite" 
+                className="w-24 sm:w-32 h-auto hidden dark:block"
+              />
             </a>
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight">
-            Text to Speech
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight flex items-center justify-center gap-3">
+            Text to Speech 
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+            </svg>
           </h1>
           <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
             Transform your text into natural, human-like speech
