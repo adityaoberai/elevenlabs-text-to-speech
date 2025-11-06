@@ -12,7 +12,7 @@ interface VoiceSettings {
 }
 
 export default function Home() {
-  const [text, setText] = useState('');
+  const [text, setText] = useState('"Hello world" is a great phrase to put yourself out there, try something new, and explore new possibilities. You never know what you might find or how surprised you might be. Here\'s to risk-taking, exploration, and saying hello to the world. Cheers.');
   const [loading, setLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
