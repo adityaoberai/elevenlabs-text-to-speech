@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js';
+import { VOICES } from '@/constants/voices';
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,7 +22,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const voiceId = voice_id || '21m00Tcm4TlvDq8ikWAM'; // Default voice: Rachel
+    const voiceId = voice_id || VOICES[0].id; // Default voice: Rachel
 
     // Initialize ElevenLabs client
     const elevenlabs = new ElevenLabsClient({
